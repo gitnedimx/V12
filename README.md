@@ -1,1 +1,2 @@
-# V12
+# odoo
+instancia odoo.sh
