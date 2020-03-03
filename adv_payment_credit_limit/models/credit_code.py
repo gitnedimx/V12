@@ -172,6 +172,7 @@ class CreditCode(models.Model):
                     AND (account_account.internal_type IN ('receivable'))
                     AND (l.partner_id = %s)
                     AND l.company_id = %s
+                    AND l.amount_residual > 0.00
                     AND ''' + dates_query + '''
                     '''
         cr.execute(query, [partner, user_company, check_date])
@@ -217,10 +218,10 @@ class CreditCode(models.Model):
                             date = datetime.strptime(total_line[1][0], "%Y-%m-%d").date()
                             if delivery_date >= date:
                                 past_due_amt += total_line[1][1]
-                                if account_invoice.type == 'out_invoice':
-                                    past_due_amt += total_line[1][1]
-                                elif account_invoice.type == 'out_refund':
-                                    past_due_amt -= total_line[1][1]
+                            elif account_invoice.type == 'out_invoice':
+                                past_due_amt += total_line[1][1]
+                            elif account_invoice.type == 'out_refund':
+                                past_due_amt -= total_line[1][1]
                     else:
                         if account_invoice.date_due and delivery_date >= account_invoice.date_due:
                             if account_invoice.type == 'out_invoice':
@@ -240,7 +241,6 @@ class CreditCode(models.Model):
                         past_due_amt = self.calculate_due_amount(partner.id, rule_line.operator_condition, days, sale_order, partner.currency_id)
                         if past_due_amt > 0.0:
                             temp = True
-                            # return False
                         else:
                             temp = False
                     elif rule_line.of:
