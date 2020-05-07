@@ -3,7 +3,7 @@
 
 {
     'name': 'Advance Credit Check Rules',
-    'version': '1.0.2',
+    'version': '1.0',
     'summary': 'Allows to configure advance credit check rules and apply on customer',
     'sequence': 21,
     'description': """
